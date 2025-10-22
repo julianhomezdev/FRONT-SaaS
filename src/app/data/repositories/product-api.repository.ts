@@ -3,6 +3,7 @@ import { ProductRepository } from "../../domain/repositories/product.repository"
 import { HttpClient } from "@angular/common/http";
 import { CreateProductRequest, Product, ProductListResponse } from "../../core/models/product.model";
 import { Observable } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
 
