@@ -1,0 +1,67 @@
+:host {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/**Main container**/
+
+.main-nav-bar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(12, 12, 68);
+    gap: 50px;
+}
+
+
+.main-nav-bar-section {
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+
+
+.container-logo-title {
+    display: flex;
+    padding: 30px 30px;
+    align-items: center;
+    gap: 20px;
+    color: white;
+}
+
+
+
+#logo-main-nav {
+
+    max-width: 30%;
+    height: auto;
+}
+
+.main-nav-bar-section ul {
+    font-family: "Oswald", sans-serif;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100% !important;
+}
+
+.main-nav-bar-section li {
+    padding: 1rem 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.main-nav-bar-section li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-left-color: #3498db;
+    padding-left: 1.8rem;
+}
+
+.main-nav-bar-section li:active {
+    background: rgba(255, 255, 255, 0.15);
+}
