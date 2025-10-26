@@ -19,6 +19,14 @@ export const routes: Routes = [
                 import('./presentation/pages/home/home-page.component')
                     .then(m => m.default)
 
+        }, {
+
+            path: 'products',
+            loadComponent: () =>
+                import('./presentation/pages/products/products-page.component')
+                    
+
+
         }
 
     ]}

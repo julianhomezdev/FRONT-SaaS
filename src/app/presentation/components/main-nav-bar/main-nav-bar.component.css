@@ -29,13 +29,19 @@
     align-items: center;
     gap: 20px;
     color: white;
+    
+
+    a {
+        width: 50%;
+        height: 100%;
+    }
 }
 
 
 
-#logo-main-nav {
+#logo-main-nav{
 
-    max-width: 30%;
+    width: 100%;
     height: auto;
 }
 
@@ -45,6 +51,7 @@
     padding: 0;
     margin: 0;
     width: 100% !important;
+    
 }
 
 .main-nav-bar-section li {
