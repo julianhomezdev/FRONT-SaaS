@@ -1,0 +1,12 @@
+ <div class="size-filter">
+      <select 
+        id="sizeFilter"
+        [(ngModel)]="selectedSizeId" 
+        (ngModelChange)="onSizeChange()"
+        class="size-select">
+        <option [ngValue]="null">Todas las tallas</option>
+        <option *ngFor="let size of availableSizes" [value]="size.id">
+          {{ size.sizeName }}
+        </option>
+      </select>
+    </div>

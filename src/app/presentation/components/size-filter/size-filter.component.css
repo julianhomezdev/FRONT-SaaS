@@ -1,0 +1,21 @@
+ .size-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .size-filter label {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+    .size-select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+    }
+    .size-select:focus {
+      outline: none;
+      border-color: #667eea;
+    }

@@ -4,6 +4,8 @@ import { Component, OnInit } from "@angular/core";
 import { Product } from "../../../core/models/product.model";
 import { ProductApiService } from "../../../core/services/product-api.service";
 import FilterManagerComponent, { FilterCriteria } from "../../components/filter-manager/filter-manager.component";
+import CreateProductComponent from "../../components/create-product/create-product.component";
+import { Size } from "../../../core/models/size.model";
 
 
 @Component({
@@ -11,7 +13,7 @@ import FilterManagerComponent, { FilterCriteria } from "../../components/filter-
 
     selector: 'products-page',
     standalone: true,
-    imports: [CommonModule, RouterModule, FilterManagerComponent],
+    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent],
     styleUrl: './products-page.component.css',
     templateUrl: './products-page.component.html'
 
@@ -24,8 +26,10 @@ export default class ProductsPageComponent implements OnInit {
 
     products: Product[] = [];
     filteredProducts: Product[] = [];
+    availableSizes: Size[] = [];
     loading: boolean = false;
     error: string | null = null;
+    showCreateModal: boolean = false;
 
     pageSize: number = 10;
     pageNumber: number = 1;
@@ -40,6 +44,7 @@ export default class ProductsPageComponent implements OnInit {
         
 
         this.loadProducts();
+        this.loadSizes();
     }
 
    
@@ -50,12 +55,13 @@ export default class ProductsPageComponent implements OnInit {
         this.loading = true;
         this.error = null;
 
-        this.productService.getAllProducts(this.pageSize, this.pageNumber)
+        this.productService.getAllProducts(this.pageSize, this.pageNumber, undefined)
             .subscribe({
 
                 next: (products) => {
 
                     console.log(products);
+
 
                     this.products = products;
                     this.loading = false;
@@ -74,30 +80,53 @@ export default class ProductsPageComponent implements OnInit {
             });
     }
 
-    onFilterChange(filters: FilterCriteria): void {
+    loadSizes(): void {
 
-        console.log(filters);
-        console.log(this.products.length);
-        console.log(this.products);
+        this.productService.getSizes().subscribe({
+            
+        next: (sizes) => {
 
-        const term = filters.searchTerm.toLowerCase().trim();
+            this.availableSizes = sizes;
 
-        if (term) {
+        },
 
-            this.filteredProducts = this.products.filter(product =>
+        error: (err) => {
 
-                product.productName.toLowerCase().includes(term) ||
-                product.productReference.toLowerCase().includes(term)
+            console.error('Error loading sizes:', err);
 
-            );
-
-        } else {
-
-            this.filteredProducts= [...this.products];
-
+            
         }
+        });
+  }
 
-    }
+    onFilterChange(filters: FilterCriteria): void {
+    this.loading = true;
+    const sizeIds = filters.selectedSizeId ? [filters.selectedSizeId] : undefined;
+    
+    this.productService.getAllProducts(this.pageSize, this.pageNumber, sizeIds)
+        .subscribe({
+            next: (products) => {
+                this.products = products;
+                this.loading = false;
+                
+                if (filters.searchTerm) {
+                    const term = filters.searchTerm.toLowerCase().trim();
+                    this.filteredProducts = products.filter(product =>
+                        product.productName.toLowerCase().includes(term) ||
+                        product.productReference.toLowerCase().includes(term)
+                    );
+                } else {
+                    this.filteredProducts = products;
+                }
+            },
+            error: (err) => {
+                this.error = 'Error loading products';
+                this.loading = false;
+                console.error(err);
+            }
+        });
+
+}
 
 
 
@@ -114,6 +143,19 @@ export default class ProductsPageComponent implements OnInit {
 
     }
 
+    toggleCreateModal(): void {
+
+        this.showCreateModal = !this.showCreateModal;
+
+    }
+
+    onProductCreated(): void {
+
+        this.showCreateModal = false;
+        this.loadProducts(); // Recharge after creation
+
+    }
+
     selectOption(option: string): void{
 
         this.selectedOption = option;
@@ -123,7 +165,10 @@ export default class ProductsPageComponent implements OnInit {
 
         switch(option) {
 
+            case 'Crear producto':
 
+                this.toggleCreateModal();
+                break;
 
 
         }

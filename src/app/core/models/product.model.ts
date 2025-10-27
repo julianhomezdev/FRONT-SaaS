@@ -1,10 +1,13 @@
+import { Size } from "./size.model";
+
 export interface Product {
 
     id?: number;
     productName: string;
     productReference: string;
     productPrice: number;
-    productTypeId: number
+    productTypeId: number;
+    productSizes?: ProductsSizes[];
 
 }
 
@@ -14,6 +17,7 @@ export interface ProductsSizes {
     productId: number;
     sizeId: number;
     sizeStock: number
+    size?: Size;
 
 }
 

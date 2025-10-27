@@ -8,29 +8,29 @@
 
             <div class="utils-component" id="filter-manager">
 
-                <filter-manager (filterChange)="onFilterChange($event)"></filter-manager>
+                <filter-manager 
+                    (filterChange)="onFilterChange($event)"
+                    [availableSizes]="availableSizes"    
+                >
+                </filter-manager>
 
             </div>
             <div class="utils-component" id="utils-crud">
                 <div class="dropdown-custom">
                     <div class="dropdown-btn" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
                         <span>{{ selectedOption }}</span>
-                        <span class="arrow">▼</span>
                     </div>
 
                     <div class="dropdown-list" [class.open]="isDropdownOpen">
                         <div class="dropdown-item" (click)="selectOption('Crear producto')">
-                            <span class="icon">📋</span>
                             <span>Crear producto</span>
                         </div>
 
                         <div class="dropdown-item" (click)="selectOption('Editar producto')">
-                            <span class="icon">✏️</span>
                             <span>Editar Producto</span>
                         </div>
 
                         <div class="dropdown-item" (click)="selectOption('Eliminar producto')">
-                            <span class="icon">🗑️</span>
                             <span>Eliminar producto</span>
                         </div>
                     </div>
@@ -39,6 +39,13 @@
 
 
         </div>
+
+        <create-product
+            *ngIf="showCreateModal"
+            (productCreated)="onProductCreated"
+            (closeModal)="toggleCreateModal()"
+        ></create-product>
+
 
         <div class="layout-section" id="display-products-section">
 
@@ -63,7 +70,7 @@
 
             <!-- state: empty -->
             <div *ngIf="!loading && !error && filteredProducts.length === 0">
-                <h2>There are not products</h2>
+                <h2>No hay productoss</h2>
             </div>
 
         </div>

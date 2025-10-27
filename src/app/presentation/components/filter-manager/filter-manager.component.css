@@ -1,8 +1,64 @@
 .filter-container {
-
     display: flex;
-    width: 95%;
-    height: 100%;
-    background-color: tan;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 0;
+    gap: 30px; 
+}
 
+.filter-row {
+    display: flex;
+    gap: 30px; 
+    align-items: end;
+    flex-wrap: wrap;
+    width: 100%; 
+    background-color: transparent; 
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 250px;
+    padding: 8px 0; 
+}
+
+.filter-item:first-child {
+    flex: 2; 
+    min-width: 300px;
+}
+
+@media (max-width: 1024px) {
+    .filter-container {
+        gap: 20px;
+        padding: 15px 0;
+    }
+    
+    .filter-row {
+        gap: 20px;
+    }
+    
+    .filter-item {
+        min-width: 200px;
+    }
+    
+    .filter-item:first-child {
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-container {
+        gap: 15px;
+        padding: 10px 0;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-item,
+    .filter-item:first-child {
+        min-width: 100%;
+        flex: none;
+    }
 }
