@@ -1,27 +1,27 @@
 export interface Product {
 
-    Id?: number;
-    ProductName: string;
-    ProductReference: string;
-    ProductPrice: number;
-    ProductTypeId: number
+    id?: number;
+    productName: string;
+    productReference: string;
+    productPrice: number;
+    productTypeId: number
 
 }
 
 export interface ProductsSizes {
 
-    Id?: number;
-    ProductId: number;
-    SizeId: number;
-    SizeStock: number
+    id?: number;
+    productId: number;
+    sizeId: number;
+    sizeStock: number
 
 }
 
 export interface ProductTypes {
 
-    Id?: number;
-    ProductTypeName: string;
-    ProductTypeDescription: string
+    id?: number;
+    productTypeName: string;
+    productTypeDescription: string
 
 
 }
@@ -35,9 +35,9 @@ export interface ProductListResponse {
 
 export interface CreateProductRequest {
 
-    ProductName: string;
-    ProductReference: string;
-    ProductPrice: number;
-    ProductTypeId: number;
+    productName: string;
+    productReference: string;
+    productPrice: number;
+    roductTypeId: number;
 
 }

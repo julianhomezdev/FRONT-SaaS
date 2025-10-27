@@ -1,0 +1,40 @@
+<div class="produts-main-container">
+    <div class="products-page-layout">
+        <div class="layout-section" id="title-section">
+            <h1>Gestion de Productos</h1>
+        </div>
+
+        <div class="layout-section" id="filter-section">
+
+        
+        </div>
+
+        <div class="layout-section" id="display-products-section">
+            
+            <!-- state: loading -->
+            <div *ngIf="loading" class="loading">
+                <h2>Cargando productos...</h2>
+            </div>
+
+            <!--state: error -->
+            <div *ngIf="error && !loading" class="error">
+                <h2>{{ error }}</h2>
+            </div>
+
+            <!-- state: success -->
+            <div *ngIf="!loading && !error" class="products-grid">
+                <div *ngFor="let product of products" class="product-card">
+                    <h3>{{ product.productName }}</h3>
+                    <p>{{ product.productReference }}</p>
+                    <p>{{ product.productPrice | currency }}</p>
+                </div>
+            </div>
+
+            <!-- state: empty -->
+            <div *ngIf="!loading && !error && products.length === 0">
+                <h2>There are not products</h2>
+            </div>
+
+        </div>
+    </div>
+</div>
