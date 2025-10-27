@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { ProductFormComponent } from './presentation/products/products-form/product-form.component';
 import BasicLayoutComponent from './presentation/components/layouts/basic-layout/basic-layout.component';
 
 export const routes: Routes = [

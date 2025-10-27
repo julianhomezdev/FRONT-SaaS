@@ -6,7 +6,11 @@
 
         <div class="layout-section" id="utils-section">
 
-            <div class="utils-component" id="filter-manager"></div>
+            <div class="utils-component" id="filter-manager">
+
+                <filter-manager (filterChange)="onFilterChange($event)"></filter-manager>
+
+            </div>
             <div class="utils-component" id="utils-crud">
                 <div class="dropdown-custom">
                     <div class="dropdown-btn" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
@@ -50,7 +54,7 @@
 
             <!-- state: success -->
             <div *ngIf="!loading && !error" class="products-grid">
-                <div *ngFor="let product of products" class="product-card">
+                <div *ngFor="let product of filteredProducts" class="product-card">
                     <h3>{{ product.productName }}</h3>
                     <p>{{ product.productReference }}</p>
                     <p>{{ product.productPrice | currency }}</p>
@@ -58,7 +62,7 @@
             </div>
 
             <!-- state: empty -->
-            <div *ngIf="!loading && !error && products.length === 0">
+            <div *ngIf="!loading && !error && filteredProducts.length === 0">
                 <h2>There are not products</h2>
             </div>
 

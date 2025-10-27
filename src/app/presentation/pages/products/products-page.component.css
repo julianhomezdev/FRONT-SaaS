@@ -98,8 +98,11 @@
 #filter-manager {
 
     display: flex;
+    justify-content: center;
+    align-items: center;
     width: 75%;
     background-color: yellow;
+    padding: 0;
 
 }
 
