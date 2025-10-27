@@ -28,6 +28,9 @@ export default class ProductsPageComponent implements OnInit {
     pageSize: number = 10;
     pageNumber: number = 1;
 
+    isDropdownOpen: boolean = false;
+    selectedOption: string = 'Selecciona una opción'
+
     constructor(private productService: ProductApiService) { }
 
     ngOnInit(): void {
@@ -69,6 +72,28 @@ export default class ProductsPageComponent implements OnInit {
 
         this.pageNumber = page;
         this.loadProducts();
+
+    }
+
+    toggleDropdown(): void {
+
+        this.isDropdownOpen = !this.isDropdownOpen;
+
+    }
+
+    selectOption(option: string): void{
+
+        this.selectedOption = option;
+        this.isDropdownOpen = false;
+
+
+
+        switch(option) {
+
+
+
+
+        }
 
     }
 

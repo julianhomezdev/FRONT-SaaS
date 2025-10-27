@@ -4,13 +4,40 @@
             <h1>Gestion de Productos</h1>
         </div>
 
-        <div class="layout-section" id="filter-section">
+        <div class="layout-section" id="utils-section">
 
-        
+            <div class="utils-component" id="filter-manager"></div>
+            <div class="utils-component" id="utils-crud">
+                <div class="dropdown-custom">
+                    <div class="dropdown-btn" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
+                        <span>{{ selectedOption }}</span>
+                        <span class="arrow">▼</span>
+                    </div>
+
+                    <div class="dropdown-list" [class.open]="isDropdownOpen">
+                        <div class="dropdown-item" (click)="selectOption('Crear producto')">
+                            <span class="icon">📋</span>
+                            <span>Crear producto</span>
+                        </div>
+
+                        <div class="dropdown-item" (click)="selectOption('Editar producto')">
+                            <span class="icon">✏️</span>
+                            <span>Editar Producto</span>
+                        </div>
+
+                        <div class="dropdown-item" (click)="selectOption('Eliminar producto')">
+                            <span class="icon">🗑️</span>
+                            <span>Eliminar producto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
         <div class="layout-section" id="display-products-section">
-            
+
             <!-- state: loading -->
             <div *ngIf="loading" class="loading">
                 <h2>Cargando productos...</h2>
