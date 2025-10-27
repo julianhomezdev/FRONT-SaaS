@@ -6,6 +6,7 @@ import { ProductApiService } from "../../../core/services/product-api.service";
 import FilterManagerComponent, { FilterCriteria } from "../../components/filter-manager/filter-manager.component";
 import CreateProductComponent from "../../components/create-product/create-product.component";
 import { Size } from "../../../core/models/size.model";
+import CreateInvoiceComponent from "../../components/create-invoice/create-invoice.component";
 
 
 @Component({
@@ -13,7 +14,7 @@ import { Size } from "../../../core/models/size.model";
 
     selector: 'products-page',
     standalone: true,
-    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent],
+    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent, CreateInvoiceComponent],
     styleUrl: './products-page.component.css',
     templateUrl: './products-page.component.html'
 
@@ -37,6 +38,8 @@ export default class ProductsPageComponent implements OnInit {
     isDropdownOpen: boolean = false;
     selectedOption: string = 'Selecciona una opción'
     searchTerm: string = '';
+    showInvoiceModal: boolean = false; 
+
 
     constructor(private productService: ProductApiService) { }
 
@@ -156,6 +159,10 @@ export default class ProductsPageComponent implements OnInit {
 
     }
 
+    toggleInvoiceModal(): void {
+        this.showInvoiceModal = !this.showInvoiceModal;
+    }
+
     selectOption(option: string): void{
 
         this.selectedOption = option;
@@ -170,6 +177,9 @@ export default class ProductsPageComponent implements OnInit {
                 this.toggleCreateModal();
                 break;
 
+        case 'Crear factura': 
+                    this.toggleInvoiceModal();
+                    break;
 
         }
 

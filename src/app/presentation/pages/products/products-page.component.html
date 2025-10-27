@@ -33,6 +33,11 @@
                         <div class="dropdown-item" (click)="selectOption('Eliminar producto')">
                             <span>Eliminar producto</span>
                         </div>
+
+
+                        <div class="dropdown-item" (click)="selectOption('Crear factura')">
+                            <span>Crear factura</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,6 +50,11 @@
             (productCreated)="onProductCreated"
             (closeModal)="toggleCreateModal()"
         ></create-product>
+
+        <create-invoice
+            *ngIf="showInvoiceModal"
+            (closeModal)="toggleInvoiceModal()"
+        ></create-invoice>
 
 
         <div class="layout-section" id="display-products-section">
