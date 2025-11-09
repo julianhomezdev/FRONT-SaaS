@@ -1,0 +1,144 @@
+<div class="modal-overlay" (click)="onCancel()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Editar Producto</h2>
+            <button class="close-btn" (click)="onCancel()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Selector de producto -->
+            <div class="form-group">
+                <label for="productSelect">Seleccionar Producto:</label>
+                <select 
+                    id="productSelect" 
+                    [(ngModel)]="selectedProductId" 
+                    (change)="onProductSelect()"
+                    [disabled]="loadingProducts"
+                    class="form-control">
+                    <option value="">-- Seleccione un producto --</option>
+                    <option *ngFor="let product of products" [value]="product.id">
+                        {{ product.productName }} - {{ product.productReference }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Formulario de edición -->
+            <form *ngIf="editedProduct" class="edit-form">
+                <div class="form-group">
+                    <label for="productName">Nombre del Producto: *</label>
+                    <input 
+                        type="text" 
+                        id="productName"
+                        [(ngModel)]="editedProduct.productName"
+                        name="productName"
+                        class="form-control"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productReference">Referencia: *</label>
+                    <input 
+                        type="text" 
+                        id="productReference"
+                        [(ngModel)]="editedProduct.productReference"
+                        name="productReference"
+                        class="form-control"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Precio: *</label>
+                    <input 
+                        type="number" 
+                        id="productPrice"
+                        [(ngModel)]="editedProduct.productPrice"
+                        name="productPrice"
+                        class="form-control"
+                        min="0"
+                        step="0.01"
+                        required>
+                </div>
+
+                <!-- Sección de Tallas -->
+                <div class="sizes-section">
+                    <div class="sizes-header">
+                        <h3>Tallas y Stock</h3>
+                        <button 
+                            type="button" 
+                            class="btn-add-size"
+                            (click)="addSize()"
+                            [disabled]="loadingSizes">
+                            + Agregar Talla
+                        </button>
+                    </div>
+
+                    <div class="sizes-list">
+                        <div *ngFor="let size of editedProduct.sizes; let i = index" 
+                             class="size-item">
+                            <div class="size-select">
+                                <label>Talla:</label>
+                                <select 
+                                    [(ngModel)]="size.sizeId"
+                                    [name]="'size-' + i"
+                                    class="form-control">
+                                    <option value="">Seleccione</option>
+                                    <option 
+                                        *ngFor="let availableSize of getAvailableSizesForSelection(i)" 
+                                        [value]="availableSize.id">
+                                        {{ availableSize.sizeName }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="size-stock">
+                                <label>Stock:</label>
+                                <input 
+                                    type="number" 
+                                    [(ngModel)]="size.stock"
+                                    [name]="'stock-' + i"
+                                    class="form-control"
+                                    min="0"
+                                    placeholder="0">
+                            </div>
+
+                            <button 
+                                type="button" 
+                                class="btn-remove-size"
+                                (click)="removeSize(i)">
+                                🗑️
+                            </button>
+                        </div>
+
+                        <p *ngIf="editedProduct.sizes.length === 0" class="no-sizes">
+                            No hay tallas. Haga clic en "Agregar Talla" para añadir una.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mensaje de error -->
+                <div *ngIf="error" class="error-message">
+                    {{ error }}
+                </div>
+            </form>
+
+            <div *ngIf="!editedProduct && !loadingProducts" class="no-selection">
+                <p>Seleccione un producto para editar</p>
+            </div>
+        </div>
+
+        <div class="modal-footer" *ngIf="editedProduct">
+            <button 
+                class="btn-cancel" 
+                (click)="onCancel()"
+                [disabled]="loading">
+                Cancelar
+            </button>
+            <button 
+                class="btn-save" 
+                (click)="onSave()"
+                [disabled]="loading">
+                {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+        </div>
+    </div>
+</div>

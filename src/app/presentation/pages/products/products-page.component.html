@@ -7,14 +7,10 @@
         <div class="layout-section" id="utils-section">
 
             <div class="utils-component" id="filter-manager">
-
-                <filter-manager 
-                    (filterChange)="onFilterChange($event)"
-                    [availableSizes]="availableSizes"    
-                >
+                <filter-manager (filterChange)="onFilterChange($event)" [availableSizes]="availableSizes">
                 </filter-manager>
-
             </div>
+
             <div class="utils-component" id="utils-crud">
                 <div class="dropdown-custom">
                     <div class="dropdown-btn" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
@@ -26,61 +22,75 @@
                             <span>Crear producto</span>
                         </div>
 
-                        <div class="dropdown-item" (click)="selectOption('Editar producto')">
-                            <span>Editar Producto</span>
-                        </div>
-
                         <div class="dropdown-item" (click)="selectOption('Eliminar producto')">
                             <span>Eliminar producto</span>
                         </div>
 
-
                         <div class="dropdown-item" (click)="selectOption('Crear factura')">
                             <span>Crear factura</span>
+                        </div>
+
+                        <div class="dropdown-item" (click)="selectOption('Editar producto')">
+                            <span>Editar producto</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-
         </div>
 
-        <create-product
-            *ngIf="showCreateModal"
-            (productCreated)="onProductCreated"
-            (closeModal)="toggleCreateModal()"
-        ></create-product>
+        <create-product *ngIf="showCreateModal" (productCreated)="onProductCreated()"
+            (closeModal)="toggleCreateModal()"></create-product>
 
-        <create-invoice
-            *ngIf="showInvoiceModal"
-            (closeModal)="toggleInvoiceModal()"
-        ></create-invoice>
+        <create-invoice *ngIf="showInvoiceModal" (closeModal)="toggleInvoiceModal()"></create-invoice>
 
+        <delete-product *ngIf="showDeleteModal" (closeModal)="toggleDeleteModal()"
+            (productDeleted)="onProductDeleted()"></delete-product>
+
+       <edit-product 
+            *ngIf="showEditModal" 
+            (productUpdated)="onProductUpdated()" 
+            (closeModal)="toggleEditModal()">
+        </edit-product>
 
         <div class="layout-section" id="display-products-section">
 
-            <!-- state: loading -->
             <div *ngIf="loading" class="loading">
                 <h2>Cargando productos...</h2>
             </div>
 
-            <!--state: error -->
             <div *ngIf="error && !loading" class="error">
                 <h2>{{ error }}</h2>
             </div>
 
-            <!-- state: success -->
             <div *ngIf="!loading && !error" class="products-grid">
                 <div *ngFor="let product of filteredProducts" class="product-card">
-                    <h3>{{ product.productName }}</h3>
-                    <p>{{ product.productReference }}</p>
-                    <p>{{ product.productPrice | currency }}</p>
+                    <div class="product-image">
+                        <img [src]="getProductImageUrl(product)" [alt]="product.productName" />
+                    </div>
+
+                    <div class="product-info">
+                        <h3>{{ product.productName }}</h3>
+                        <p class="product-reference">Ref: {{ product.productReference }}</p>
+
+                        <div class="sizes-container">
+                            <div *ngFor="let size of product.sizes || []" class="size-badge"
+                                [class.out-of-stock]="(size?.sizeStock || 0) === 0"
+                                [class.low-stock]="(size?.sizeStock || 0) > 0 && (size?.sizeStock || 0) <= 5">
+
+                                <span class="size-name">{{ size?.sizeName }}</span>
+                                <span class="size-stock">{{ size?.sizeStock }}</span>
+
+                            </div>
+                        </div>
+
+                        <p class="product-price">{{ product.productPrice | currency }}</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- state: empty -->
             <div *ngIf="!loading && !error && filteredProducts.length === 0">
-                <h2>No hay productoss</h2>
+                <h2>No hay productos</h2>
             </div>
 
         </div>

@@ -1,6 +1,7 @@
 export interface Size {
 
 
-    id: number;
+    id? : number;
+    sizeId?: number;
     sizeName: string;
 }

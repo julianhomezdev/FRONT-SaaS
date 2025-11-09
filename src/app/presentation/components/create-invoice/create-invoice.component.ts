@@ -1,12 +1,20 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ProductApiService } from "../../../core/services/product-api.service";
+import { Product } from "../../../core/models/product.model";
+import { setTimeout } from "timers/promises";
+
 
 interface InvoiceItem {
+    productId: number;
     productName: string;
+    sizeId: number;
+    sizeName: string;
     quantity: number;
     unitPrice: number;
     total: number;
+    availableStock: number;
 }
 
 @Component({
@@ -16,47 +24,118 @@ interface InvoiceItem {
     templateUrl: './create-invoice.component.html',
     styleUrl: './create-invoice.component.css'
 })
-export default class CreateInvoiceComponent {
+export default class CreateInvoiceComponent implements OnInit {
     @Output() closeModal = new EventEmitter<void>();
+    @Output() invoiceCreated = new EventEmitter<void>();
 
     invoiceNumber: string = this.generateInvoiceNumber();
     customerName: string = '';
     customerDocument: string = '';
     date: Date = new Date();
 
-    productName: string = '';
+    products: Product[] = [];
+    selectedProduct: Product | null = null;
+    selectedProductId: number = 0;
+    selectedSizeId: number = 0;
     quantity: number = 1;
-    unitPrice: number = 0;
 
     items: InvoiceItem[] = [];
     subtotal: number = 0;
     tax: number = 0;
     total: number = 0;
 
+    loading: boolean = false;
+    loadingProducts: boolean = false;
+    error: string | null = null;
+
+    constructor(private productService: ProductApiService) { }
+
+    ngOnInit(): void {
+        this.loadProducts();
+    }
+
     generateInvoiceNumber(): string {
         const date = new Date();
         return `INV-${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 10000)}`;
     }
 
+    loadProducts(): void {
+        this.loadingProducts = true;
+        this.productService.getAllProducts().subscribe({
+            next: (products) => {
+
+
+                this.products = products;
+                this.loadingProducts = false;
+            },
+            error: (err) => {
+                console.error('Error cargando productos:', err);
+                this.error = 'Error al cargar productos';
+                this.loadingProducts = false;
+            }
+        });
+    }
+
+    onProductChange(): void {
+        this.selectedProduct = this.products.find(p => p.id === +this.selectedProductId) || null;
+        this.selectedSizeId = 0;
+        this.quantity = 1;
+    }
+
+    getAvailableStock(): number {
+        if (!this.selectedProduct || !this.selectedSizeId) return 0;
+        const size = this.selectedProduct.sizes.find(s => s.sizeId === +this.selectedSizeId);
+        return size ? size.sizeStock : 0;
+    }
+
     addItem(): void {
-        if (!this.productName || this.quantity <= 0 || this.unitPrice <= 0) {
-            alert('Completa todos los campos del producto');
+        if (!this.selectedProduct || !this.selectedSizeId || this.quantity <= 0) {
+            alert('Selecciona un producto, talla y cantidad válida');
             return;
         }
 
-        const item: InvoiceItem = {
-            productName: this.productName,
-            quantity: this.quantity,
-            unitPrice: this.unitPrice,
-            total: this.quantity * this.unitPrice
-        };
+        const size = this.selectedProduct.sizes.find(s => s.sizeId === +this.selectedSizeId);
+        if (!size) {
+            alert('Talla no encontrada');
+            return;
+        }
 
-        this.items.push(item);
+        if (this.quantity > size.sizeStock) {
+            alert(`Stock insuficiente. Disponible: ${size.sizeStock}`);
+            return;
+        }
+
+        const existingItem = this.items.find(
+            item => item.productId === this.selectedProduct!.id && item.sizeId === +this.selectedSizeId
+        );
+
+        if (existingItem) {
+            const newQuantity = existingItem.quantity + this.quantity;
+            if (newQuantity > size.sizeStock) {
+                alert(`Stock insuficiente. Disponible: ${size.sizeStock}`);
+                return;
+            }
+            existingItem.quantity = newQuantity;
+            existingItem.total = existingItem.quantity * existingItem.unitPrice;
+        } else {
+            const item: InvoiceItem = {
+                productId: this.selectedProduct.id!,
+                productName: this.selectedProduct.productName,
+                sizeId: +this.selectedSizeId,
+                sizeName: size?.sizeName || 'Sin nombre',
+                quantity: this.quantity,
+                unitPrice: this.selectedProduct.productPrice,
+                total: this.quantity * this.selectedProduct.productPrice,
+                availableStock: size.sizeStock
+            };
+            this.items.push(item);
+        }
+
         this.calculateTotals();
-        
-        this.productName = '';
+        this.selectedProductId = 0;
+        this.selectedProduct = null;
+        this.selectedSizeId = 0;
         this.quantity = 1;
-        this.unitPrice = 0;
     }
 
     removeItem(index: number): void {
@@ -70,7 +149,7 @@ export default class CreateInvoiceComponent {
         this.total = this.subtotal + this.tax;
     }
 
-    printInvoice(): void {
+    createInvoice(): void {
         if (!this.customerName || !this.customerDocument) {
             alert('Completa los datos del cliente');
             return;
@@ -81,6 +160,45 @@ export default class CreateInvoiceComponent {
             return;
         }
 
+        this.loading = true;
+        this.error = null;
+
+        const invoiceData = {
+            invoiceNumber: this.invoiceNumber,
+            customerName: this.customerName,
+            customerDocument: this.customerDocument,
+            date: this.date.toISOString(),
+            items: this.items.map(item => ({
+                productId: item.productId,
+                sizeId: item.sizeId,
+                quantity: item.quantity,
+                unitPrice: item.unitPrice,
+                total: item.total
+            })),
+            subtotal: this.subtotal,
+            tax: this.tax,
+            total: this.total
+        };
+
+         this.productService.createInvoice(invoiceData).subscribe({
+        next: (response) => {
+            this.loading = false;
+            this.printInvoice();
+            
+            window.setTimeout(() => {
+            this.invoiceCreated.emit();
+            this.close();
+        }, 500);
+        },
+        error: (err) => {
+            this.loading = false;
+            this.error = 'Error al crear la factura';
+            console.error(err);
+        }
+    });
+}
+
+    printInvoice(): void {
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
 
@@ -115,6 +233,7 @@ export default class CreateInvoiceComponent {
                     <thead>
                         <tr>
                             <th>Producto</th>
+                            <th>Talla</th>
                             <th>Cantidad</th>
                             <th>Precio Unit.</th>
                             <th>Total</th>
@@ -124,6 +243,7 @@ export default class CreateInvoiceComponent {
                         ${this.items.map(item => `
                             <tr>
                                 <td>${item.productName}</td>
+                                <td>${item.sizeName}</td>
                                 <td>${item.quantity}</td>
                                 <td>$${item.unitPrice.toLocaleString('es-CO')}</td>
                                 <td>$${item.total.toLocaleString('es-CO')}</td>
@@ -142,7 +262,7 @@ export default class CreateInvoiceComponent {
 
         printWindow.document.close();
         printWindow.focus();
-        setTimeout(() => {
+        window.setTimeout(() => {
             printWindow.print();
             printWindow.close();
         }, 250);

@@ -62,3 +62,15 @@
         flex: none;
     }
 }
+.filter-item select,
+.filter-item input {
+    outline: none;
+    border-bottom: none;
+}
+
+.filter-item select:focus,
+.filter-item input:focus {
+    outline: none !important;
+    border-bottom: none !important;
+    box-shadow: none  Im !important;
+}

@@ -23,6 +23,10 @@ export default class CreateProductComponent implements OnInit {
     @Output() productCreated = new EventEmitter<void>();
     @Output() closeModal = new EventEmitter<void>();
 
+    selectedImage: string | ArrayBuffer | null = null;
+    imageFile : File | null = null;
+
+
 
 
     productData = {
@@ -55,29 +59,42 @@ export default class CreateProductComponent implements OnInit {
 
     onSubmit(): void {
 
+        const formData = new FormData();
+
         this.loading = true;
         this.error = null;
 
         const sizesWithStock = this.productData.sizes.filter(size => size.stock > 0);
 
+        formData.append('ProductName', this.productData.productName);
+        formData.append('ProductReference', this.productData.productReference);
+        formData.append('ProductPrice', this.productData.productPrice.toString());
+        formData.append('ProductTypeId', this.productData.productTypeId.toString());
 
-        const productToSend = {
-            productName: this.productData.productName,
-            productReference: this.productData.productReference,
-            productPrice: this.productData.productPrice,
-            productTypeId: this.productData.productTypeId,
-            sizes: sizesWithStock  
-        };
+        formData.append('Sizes', JSON.stringify(
+            sizesWithStock.map(size => ({
+                SizeId: size.sizeId,  
+                Stock: size.stock    
+            }))
+        ));
 
-        this.productService.createProduct(productToSend).subscribe({
+        if(this.imageFile) {
+
+            formData.append('imageFile', this.imageFile);
+
+        }
+        
+
+        this.productService.createProduct(formData).subscribe({
 
 
 
             next: (response) => {
 
                 this.loading = false;
-                this.productCreated.emit();
                 this.resetForm();
+                this.closeModal.emit();
+                this.productCreated.emit();
 
             },
 
@@ -130,19 +147,64 @@ export default class CreateProductComponent implements OnInit {
 
         };
 
+
+        this.selectedImage = null;
+        this.imageFile = null;
+
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
+
     }
 
-    addSize(): void {
+    addSize(sizeId?: number): void {
 
+        
         this.productData.sizes.push({
-            sizeId: 1,
+            sizeId: sizeId || 0,
             stock: 0
-        })
+        });
 
     }
 
     removeSize(index: number): void {
         this.productData.sizes.splice(index, 1);
+    }
+
+    onSizeChange(index: number, event: any): void {
+        this.productData.sizes[index].sizeId = +event.target.value;
+    }
+
+    isSizeAlreadySelected(sizeId: number, currentIndex: number): boolean {
+    return this.productData.sizes.some((size, index) => 
+        index !== currentIndex && size.sizeId === sizeId
+    );
+}
+
+
+    onFileSelected(event: any):void {
+
+        const file = event.target.files[0];
+        if(file) {
+
+            this.imageFile = file;
+
+
+
+            const reader = new FileReader();
+            reader.onload = () => {
+
+                this.selectedImage = reader.result;
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+
     }
     
 

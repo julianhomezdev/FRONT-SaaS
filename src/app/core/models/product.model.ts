@@ -8,6 +8,8 @@ export interface Product {
     productPrice: number;
     productTypeId: number;
     productSizes?: ProductsSizes[];
+    imageUrl?: string;
+    sizes: ProductsSizes[];
 
 }
 
@@ -18,6 +20,8 @@ export interface ProductsSizes {
     sizeId: number;
     sizeStock: number
     size?: Size;
+    sizeName? : string;
+    stock?: number; 
 
 }
 

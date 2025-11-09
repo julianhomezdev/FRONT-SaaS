@@ -8,49 +8,37 @@
         <form (ngSubmit)="onSubmit()" class="product-form">
             <div class="form-group">
                 <label for="productName">Nombre del Producto:</label>
-                <input 
-                    type="text" 
-                    id="productName"
-                    [(ngModel)]="productData.productName" 
-                    name="productName"
-                    required
+                <input type="text" id="productName" [(ngModel)]="productData.productName" name="productName" required
                     placeholder="Ingresa el nombre del producto">
             </div>
 
             <div class="form-group">
                 <label for="productReference">Referencia:</label>
-                <input 
-                    type="text" 
-                    id="productReference"
-                    [(ngModel)]="productData.productReference" 
-                    name="productReference"
-                    required
-                    placeholder="Ingresa la referencia">
+                <input type="text" id="productReference" [(ngModel)]="productData.productReference"
+                    name="productReference" required placeholder="Ingresa la referencia">
             </div>
 
             <div class="form-group">
                 <label for="productPrice">Precio:</label>
-                <input 
-                    type="number" 
-                    id="productPrice"
-                    [(ngModel)]="productData.productPrice" 
-                    name="productPrice"
-                    required
-                    min="0"
-                    step="0.01"
-                    placeholder="0.00">
+                <input type="number" id="productPrice" [(ngModel)]="productData.productPrice" name="productPrice"
+                    required min="0" step="0.01" placeholder="0.00">
             </div>
 
             <div class="form-group">
                 <label for="productTypeId">Tipo de Producto:</label>
-                <select 
-                    id="productTypeId"
-                    [(ngModel)]="productData.productTypeId" 
-                    name="productTypeId">
-                    <option value="1">Tipo 1</option>
-                    <option value="2">Tipo 2</option>
-                    <option value="3">Tipo 3</option>
+                <select id="productTypeId" [(ngModel)]="productData.productTypeId" name="productTypeId">
+                    <option value="1">Tennis</option>
+                   
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="productImage">Imagen del Producto:</label>
+                <input type="file" id="productImage" (change)="onFileSelected($event)" accept="image/*"
+                    class="file-input">
+                <div *ngIf="selectedImage" class="image-preview">
+                    <img [src]="selectedImage" alt="Vista previa">
+                </div>
             </div>
 
             <div class="sizes-section">
@@ -59,7 +47,6 @@
                     <button type="button" class="btn-add-size" (click)="addSize()">+ Agregar Talla</button>
                 </div>
 
-                <!-- Estado de carga -->
                 <div *ngIf="loadingSizes" class="loading-sizes">
                     Cargando tallas disponibles...
                 </div>
@@ -67,33 +54,25 @@
                 <div *ngFor="let size of productData.sizes; let i = index" class="size-row">
                     <div class="size-select">
                         <label>Talla:</label>
-                        <select [(ngModel)]="size.sizeId" [name]="'sizeId_' + i">
-                            <option *ngFor="let availableSize of availableSizes" 
-                                    [value]="availableSize.id">
-                                {{ availableSize.sizeName }} <!-- ← CORREGIR: "name" a "sizeName" -->
+                        <select [ngModel]="size.sizeId" (ngModelChange)="size.sizeId = +$event" [name]="'sizeId_' + i">
+                            <option *ngFor="let availableSize of availableSizes" [value]="availableSize.id">
+                                {{ availableSize.sizeName }}
                             </option>
                         </select>
                     </div>
-                    
+
                     <div class="stock-input">
                         <label>Stock:</label>
-                        <input 
-                            type="number" 
-                            [(ngModel)]="size.stock" 
-                            [name]="'stock_' + i"
-                            min="0"
-                            placeholder="0">
+                        <input type="number" [(ngModel)]="size.stock" [name]="'stock_' + i" min="0" placeholder="0">
                     </div>
-                    
+
                     <button type="button" class="btn-remove-size" (click)="removeSize(i)">×</button>
                 </div>
 
-                <!-- Mensaje cuando no hay tallas -->
                 <div *ngIf="productData.sizes.length === 0 && !loadingSizes" class="no-sizes">
                     No hay tallas agregadas. Haz clic en "Agregar Talla" para comenzar.
                 </div>
             </div>
-
             <div class="form-actions">
                 <button type="button" class="btn-cancel" (click)="onCancel()">Cancelar</button>
                 <button type="submit" class="btn-submit" [disabled]="loading">
@@ -106,4 +85,4 @@
             </div>
         </form>
     </div>
-</div>
+</div>  
