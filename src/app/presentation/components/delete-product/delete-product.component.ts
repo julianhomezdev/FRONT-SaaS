@@ -65,29 +65,34 @@ export default class DeleteProductComponent implements OnInit {
 
 
     onDelete(): void {
-
-        if(!this.selectedProductId) {
-
-
-            this.error = "Por favor selecciona un producto";
-            return;
-
-        }
-
-
-        
-
-
-        if (!confirm('¿Estas seguro que deseas eliminar este producto?')) {
-
-            return;
-
-        } 
-
-        this.loading = true;
-        this.error = null;
-
+    if (!this.selectedProductId) {
+        this.error = "Por favor selecciona un producto";
+        return;
     }
+
+    if (!confirm('¿Estas seguro que deseas eliminar este producto?')) {
+        return;
+    } 
+
+    this.loading = true;
+    this.error = null;
+
+    this.productService.deleteProduct(this.selectedProductId).subscribe({
+        next: () => {
+            this.loading = false;
+            this.productDeleted.emit(); 
+            this.closeModal.emit(); 
+            this.selectedProductId = null; 
+            
+            this.loadAllProducts();
+        },
+        error: (err) => {
+            this.loading = false;
+            this.error = 'Error eliminando producto';
+            console.error('Error eliminando producto:', err);
+        }
+    });
+}
 
     onCancel(): void {
 
