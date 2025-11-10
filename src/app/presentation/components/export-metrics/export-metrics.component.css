@@ -1,5 +1,5 @@
 .modal-overlay {
-   position: fixed;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -15,7 +15,7 @@
     background: white;
     padding: 30px;
     border-radius: 8px;
-    max-width: 800px;
+    max-width: 600px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
@@ -28,18 +28,36 @@
     margin-bottom: 20px;
 }
 
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+}
+
 .close-btn {
     background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
+    color: #666;
+}
+
+.close-btn:hover {
+    color: #000;
 }
 
 .form-section {
     margin-bottom: 30px;
 }
 
-.form-section h3 {
+.form-section p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.date-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
     margin-bottom: 15px;
 }
 
@@ -51,6 +69,7 @@
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #333;
 }
 
 .form-group input {
@@ -58,55 +77,30 @@
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 14px;
 }
 
-.add-item {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr auto;
-    gap: 10px;
-    margin-bottom: 20px;
+.form-group input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
 }
 
-.add-item input {
-    padding: 8px;
-    border: 1px solid #ddd;
+.alert {
+    padding: 10px 15px;
     border-radius: 4px;
+    margin-bottom: 15px;
 }
 
-.add-item button {
-    padding: 8px 16px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-.totals-section {
-    text-align: right;
-    margin: 20px 0;
-    font-size: 1.1em;
-}
-
-.totals-section .total {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #28a745;
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 .form-actions {
@@ -120,6 +114,22 @@ th {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-actions button:first-child {
+    background: #6c757d;
+    color: white;
+}
+
+.form-actions button:first-child:hover:not(:disabled) {
+    background: #5a6268;
 }
 
 .form-actions button:last-child {
@@ -127,7 +137,12 @@ th {
     color: white;
 }
 
-.form-actions button:first-child {
-    background: #6c757d;
-    color: white;
+.form-actions button:last-child:hover:not(:disabled) {
+    background: #218838;
+}
+
+@media (max-width: 640px) {
+    .date-inputs {
+        grid-template-columns: 1fr;
+    }
 }

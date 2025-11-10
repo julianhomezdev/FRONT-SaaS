@@ -33,6 +33,10 @@
                         <div class="dropdown-item" (click)="selectOption('Editar producto')">
                             <span>Editar producto</span>
                         </div>
+
+                        <div class="dropdown-item" (click)="selectOption('Exportar metricas')">
+                            <span>Exportar métricas</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,6 +56,13 @@
             (productUpdated)="onProductUpdated()" 
             (closeModal)="toggleEditModal()">
         </edit-product>
+
+        <export-metrics
+            *ngIf="showExportModal" 
+            (closeModal)="toggleExportModal()">
+
+
+        </export-metrics>
 
         <div class="layout-section" id="display-products-section">
 

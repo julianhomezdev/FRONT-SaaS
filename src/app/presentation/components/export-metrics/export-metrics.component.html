@@ -1,0 +1,55 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Exportar Reporte de Ventas</h2>
+      <button class="close-btn" (click)="onClose()">&times;</button>
+    </div>
+
+    <div class="form-section">
+      <p>Selecciona el rango de fechas para generar el reporte de ventas en Excel</p>
+
+      <div class="date-inputs">
+        <div class="form-group">
+          <label for="startDate">Fecha Inicial</label>
+          <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            [max]="maxDate"
+            [disabled]="isLoading"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="endDate">Fecha Final</label>
+          <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            [max]="maxDate"
+            [min]="startDate"
+            [disabled]="isLoading"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button (click)="onClose()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button (click)="onExport()" [disabled]="isLoading">
+        <span *ngIf="isLoading">Exportando...</span>
+        <span *ngIf="!isLoading">Exportar</span>
+      </button>
+    </div>
+  </div>
+</div>

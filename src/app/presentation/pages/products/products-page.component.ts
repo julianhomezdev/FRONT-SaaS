@@ -1,29 +1,30 @@
-    import { CommonModule } from "@angular/common";
-    import { RouterModule } from "@angular/router";
-    import { Component, OnInit } from "@angular/core";
-    import { Product } from "../../../core/models/product.model";
-    import { ProductApiService } from "../../../core/services/product-api.service";
-    import FilterManagerComponent, { FilterCriteria } from "../../components/filter-manager/filter-manager.component";
-    import CreateProductComponent from "../../components/create-product/create-product.component";
-    import { Size } from "../../../core/models/size.model";
-    import CreateInvoiceComponent from "../../components/create-invoice/create-invoice.component";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { Product } from "../../../core/models/product.model";
+import { ProductApiService } from "../../../core/services/product-api.service";
+import FilterManagerComponent, { FilterCriteria } from "../../components/filter-manager/filter-manager.component";
+import CreateProductComponent from "../../components/create-product/create-product.component";
+import { Size } from "../../../core/models/size.model";
+import CreateInvoiceComponent from "../../components/create-invoice/create-invoice.component";
 import DeleteProductComponent from "../../components/delete-product/delete-product.component";
 import EditProductComponent from "../../components/edit-product/edit-product.component";
+import ExportMetrics from "../../components/export-metrics/export-metrics.component";
 
 
-    @Component({
+@Component({
 
-        selector: 'products-page',
-        standalone: true,
-        imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent, CreateInvoiceComponent, DeleteProductComponent, EditProductComponent],
-        styleUrl: './products-page.component.css',
-        templateUrl: './products-page.component.html'
+    selector: 'products-page',
+    standalone: true,
+    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent, CreateInvoiceComponent, DeleteProductComponent, EditProductComponent, ExportMetrics],
+    styleUrl: './products-page.component.css',
+    templateUrl: './products-page.component.html'
 
-    })
+})
 
 
 
-    export default class ProductsPageComponent implements OnInit {
+export default class ProductsPageComponent implements OnInit {
 
         products: Product[] = [];
         filteredProducts: Product[] = [];
@@ -33,6 +34,7 @@ import EditProductComponent from "../../components/edit-product/edit-product.com
         showCreateModal: boolean = false;
         showDeleteModal : boolean = false;
         showEditModal: boolean = false;
+        showExportModal: boolean = false;
 
         pageSize: number = 10;
         pageNumber: number = 1;
@@ -41,6 +43,7 @@ import EditProductComponent from "../../components/edit-product/edit-product.com
         selectedOption: string = 'Selecciona una opción'
         searchTerm: string = '';
         showInvoiceModal: boolean = false; 
+
 
 
         constructor(private productService: ProductApiService) { }
@@ -53,8 +56,15 @@ import EditProductComponent from "../../components/edit-product/edit-product.com
         }
 
         toggleEditModal(): void {
-    this.showEditModal = !this.showEditModal;
-}
+            this.showEditModal = !this.showEditModal;
+        }
+
+
+        toggleExportModal(): void {
+
+            this.showExportModal = !this.showExportModal;
+
+        }
 
         onProductUpdated(): void {
             this.loadProducts();  
@@ -201,6 +211,9 @@ import EditProductComponent from "../../components/edit-product/edit-product.com
                     break;
                 case 'Editar producto':
                     this.toggleEditModal();
+                    break;
+                case 'Exportar metricas': 
+                    this.toggleExportModal();
                     break;
             
 
