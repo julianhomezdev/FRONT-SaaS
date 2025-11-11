@@ -1,0 +1,7 @@
+<h2>Iniciar sesión</h2>
+<form (ngSubmit)="onLogin()">
+  <input [(ngModel)]="identificationNumber" name="id" placeholder="Número de identificación" required />
+  <input [(ngModel)]="password" name="pass" type="password" placeholder="Contraseña" required />
+  <button type="submit">Entrar</button>
+</form>
+<a routerLink="/register">¿No tienes cuenta? Regístrate</a>
