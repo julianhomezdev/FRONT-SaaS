@@ -37,6 +37,11 @@
                         <div class="dropdown-item" (click)="selectOption('Exportar metricas')">
                             <span>Exportar métricas</span>
                         </div>
+
+                        <div class="dropdown-item" (click)="selectOption('Gestionar tallas')">
+                            <span>Gestionar tallas</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -63,6 +68,14 @@
 
 
         </export-metrics>
+
+        <manage-sizes 
+            *ngIf="showManageSizesModal" 
+            (closeModal)="toggleManageSizesModal()"
+            (sizeCreated)="onSizeCreated()">
+        </manage-sizes>
+
+        
 
         <div class="layout-section" id="display-products-section">
 

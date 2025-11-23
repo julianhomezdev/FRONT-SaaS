@@ -10,13 +10,14 @@ import CreateInvoiceComponent from "../../components/create-invoice/create-invoi
 import DeleteProductComponent from "../../components/delete-product/delete-product.component";
 import EditProductComponent from "../../components/edit-product/edit-product.component";
 import ExportMetrics from "../../components/export-metrics/export-metrics.component";
+import ManageSizesComponent from "../../components/manage-sizes/manage-sizes.component";
 
 
 @Component({
 
     selector: 'products-page',
     standalone: true,
-    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent, CreateInvoiceComponent, DeleteProductComponent, EditProductComponent, ExportMetrics],
+    imports: [CommonModule, RouterModule, FilterManagerComponent, CreateProductComponent, CreateInvoiceComponent, DeleteProductComponent, EditProductComponent, ExportMetrics, ManageSizesComponent],
     styleUrl: './products-page.component.css',
     templateUrl: './products-page.component.html'
 
@@ -35,6 +36,7 @@ export default class ProductsPageComponent implements OnInit {
         showDeleteModal : boolean = false;
         showEditModal: boolean = false;
         showExportModal: boolean = false;
+        showManageSizesModal: boolean = false;
 
         pageSize: number = 10;
         pageNumber: number = 1;
@@ -85,6 +87,13 @@ export default class ProductsPageComponent implements OnInit {
 
 
         }
+
+        toggleManageSizesModal(): void {
+        this.showManageSizesModal = !this.showManageSizesModal;
+    }
+
+    onSizeCreated(): void {
+        this.loadSizes(); }
 
     loadProducts(): void {
         this.loading = true;
@@ -215,6 +224,10 @@ export default class ProductsPageComponent implements OnInit {
                 case 'Exportar metricas': 
                     this.toggleExportModal();
                     break;
+                case 'Gestionar tallas':
+                    this.toggleManageSizesModal();
+                    break;
+                
             
 
             }

@@ -1,0 +1,67 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Gestión de Tallas</h2>
+      <button class="close-btn" (click)="close()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Formulario para crear talla -->
+      <div class="create-size-section">
+        <h3>Crear Nueva Talla</h3>
+        
+        <form (ngSubmit)="onSubmit($event)" class="create-form">
+          <div class="form-group">
+            <label for="sizeName">Nombre de la Talla</label>
+            <input
+              type="text"
+              id="sizeName"
+              [(ngModel)]="newSizeName"
+              name="sizeName"
+              placeholder="Ej: 40, 41"
+              [disabled]="loading"
+              required
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn-create"
+            [disabled]="loading || !newSizeName.trim()"
+          >
+            {{ loading ? 'Creando...' : 'Crear Talla' }}
+          </button>
+        </form>
+
+        <!-- Mensajes -->
+        <div *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+
+        <div *ngIf="error" class="error-message">
+          {{ error }}
+        </div>
+      </div>
+
+      <!-- Lista de tallas existentes -->
+      <div class="sizes-list-section">
+        <h3>Tallas Existentes</h3>
+        
+        <div *ngIf="loading && sizes.length === 0" class="loading">
+          Cargando tallas...
+        </div>
+
+        <div *ngIf="!loading && sizes.length === 0" class="no-sizes">
+          No hay tallas registradas
+        </div>
+
+        <div class="sizes-grid">
+          <div *ngFor="let size of sizes" class="size-item">
+            <span class="size-name">{{ size.sizeName }}</span>
+            <span class="size-id">ID: {{ size.id }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
