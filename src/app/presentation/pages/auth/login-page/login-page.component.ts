@@ -17,7 +17,7 @@ import { FormsModule } from "@angular/forms";
 
 export default class LoginPageComponent {
 
-identificationNumber = '';
+  identificationNumber = '';
   password = '';
   loading = false;
   errorMessage = '';
@@ -41,6 +41,7 @@ identificationNumber = '';
       .subscribe({
         next: (res) => {
           this.authService.saveToken(res.token);
+          this.loading = false;
           this.router.navigate(['/products']);
         },
         error: (err) => {

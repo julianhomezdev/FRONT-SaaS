@@ -3,51 +3,36 @@ import BasicLayoutComponent from './presentation/components/layouts/basic-layout
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-
-    // Layouts has childrens
     {
-        path: '', component: BasicLayoutComponent, children: [
-
+        path: '', 
+        component: BasicLayoutComponent,
+        canActivate: [AuthGuard], 
+        children: [
             {
                 path: '',
-                redirectTo: 'home',
+                redirectTo: 'products',
                 pathMatch: 'full'
-
             },
             {
                 path: 'home',
-                loadComponent: () =>
-                    import('./presentation/pages/home/home-page.component')
-                        .then(m => m.default)
-
-            }, {
-
+                loadComponent: () => import('./presentation/pages/home/home-page.component')
+            },
+            {
                 path: 'products',
-                canActivate: [AuthGuard],
-                loadComponent: () =>
-                    import('./presentation/pages/products/products-page.component')
-
-
-
+                loadComponent: () => import('./presentation/pages/products/products-page.component')
             }
-
         ]
     },
-
-
     {
         path: 'login',
-        loadComponent: () =>
-            import('./presentation/pages/auth/login-page/login-page.component')
-                .then(m => m.default)
+        loadComponent: () => import('./presentation/pages/auth/login-page/login-page.component')
     },
     {
         path: 'register',
-        loadComponent: () =>
-            import('./presentation/pages/auth/register-page/register-page.component')
-                .then(m => m.default)
+        loadComponent: () => import('./presentation/pages/auth/register-page/register-page.component')
     },
-
-    { path: '**', redirectTo: 'home' }
-
+    { 
+        path: '**', 
+        redirectTo: 'products' 
+    }
 ];

@@ -11,6 +11,21 @@
     z-index: 1000;
 }
 
+.total-input {
+    width: 150px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    text-align: right;
+}
+
+.total-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
 .modal-content {
     background: white;
     padding: 30px;
